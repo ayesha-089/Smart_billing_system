@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Smart Billing System - a JavaScript billing and invoice learning project.">
+  <title>Smart Billing System</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="index.html"><span class="brand-mark">S</span> Smart<span>Bill</span></a>
+      <span class="topbar-note">INVOICE MANAGEMENT</span>
+    </div>
+  </header>
+
+  <main class="container page">
+    <section class="page-heading">
+      <div>
+        <p class="eyebrow">BILLING WORKSPACE</p>
+        <h1>Smart Billing System</h1>
+        <p>Create an invoice, add products, and calculate totals automatically.</p>
+      </div>
+      <div class="invoice-chip"><span class="status-dot"></span> New invoice</div>
+    </section>
+
+    <div class="workspace">
+      <section class="left-column">
+        <section class="panel">
+          <div class="panel-heading"><div><p class="eyebrow">STEP 01</p><h2>Invoice details</h2></div><span class="step-number">01</span></div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="invoice-number">Invoice number</label>
+              <input id="invoice-number" class="form-control" type="text" value="INV-2026-001" maxlength="30">
+            </div>
+            <div class="form-group">
+              <label for="invoice-date">Invoice date</label>
+              <input id="invoice-date" class="form-control" type="date" required>
+            </div>
+            <div class="form-group">
+              <label for="customer-name">Customer name</label>
+              <input id="customer-name" class="form-control" type="text" placeholder="Enter customer name" minlength="2" maxlength="70" required>
+            </div>
+            <div class="form-group">
+              <label for="customer-phone">Phone number</label>
+              <input id="customer-phone" class="form-control" type="tel" placeholder="+92 300 1234567" pattern="[+0-9() -]{7,20}" maxlength="20">
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading"><div><p class="eyebrow">STEP 02</p><h2>Add products</h2></div><span class="step-number">02</span></div>
+          <form id="product-form">
+            <div class="product-input-grid">
+              <div class="form-group product-name-group">
+                <label for="product-name">Product name</label>
+                <input id="product-name" class="form-control" type="text" placeholder="e.g. Notebook" minlength="2" maxlength="60" required>
+              </div>
+              <div class="form-group">
+                <label for="product-price">Unit price (Rs.)</label>
+                <input id="product-price" class="form-control" type="number" min="0.01" max="10000000" step="0.01" placeholder="0.00" required>
+              </div>
+              <div class="form-group">
+                <label for="product-quantity">Quantity</label>
+                <input id="product-quantity" class="form-control" type="number" min="1" max="10000" step="1" value="1" required>
+              </div>
+              <button class="btn add-btn" type="submit"><span>＋</span> Add item</button>
+            </div>
+            <p class="form-message" id="product-message" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <section class="panel cart-panel">
+          <div class="panel-heading"><div><p class="eyebrow">STEP 03</p><h2>Invoice items</h2></div><span class="item-count" id="item-count">0 items</span></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Product</th><th>Price</th><th>Qty</th><th>Total</th><th><span class="sr-only">Action</span></th></tr></thead>
+              <tbody id="cart-body"><tr class="empty-row"><td colspan="5"><div class="empty-state"><span class="empty-icon">▤</span><strong>No products added</strong><small>Add a product above to start your invoice.</small></div></td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <aside class="right-column">
+        <section class="panel totals-panel">
+          <p class="eyebrow">STEP 04</p>
+          <h2>Invoice summary</h2>
+          <div class="summary-line"><span>Subtotal</span><strong id="subtotal">Rs. 0.00</strong></div>
+          <div class="discount-control">
+            <label for="discount">Discount (%)</label>
+            <div class="discount-input"><input id="discount" type="number" min="0" max="100" step="0.01" value="0"><span>%</span></div>
+          </div>
+          <div class="summary-line"><span>Discount amount</span><strong id="discount-amount">Rs. 0.00</strong></div>
+          <div class="discount-control">
+            <label for="tax">Tax / GST (%)</label>
+            <div class="discount-input"><input id="tax" type="number" min="0" max="100" step="0.01" value="5"><span>%</span></div>
+          </div>
+          <div class="summary-line"><span>Tax amount</span><strong id="tax-amount">Rs. 0.00</strong></div>
+          <div class="grand-total"><span>Grand total</span><strong id="grand-total">Rs. 0.00</strong></div>
+          <div class="summary-note">Tax is calculated after applying the discount.</div>
+          <button class="btn btn-full" id="print-invoice" type="button">Print invoice <span>↗</span></button>
+          <button class="btn btn-light btn-full" id="clear-invoice" type="button">Clear invoice</button>
+          <p class="form-message" id="summary-message" aria-live="polite"></p>
+        </section>
+        <section class="tip-card"><span class="tip-icon">✦</span><div><strong>Quick tip</strong><p>Add multiple products to see the subtotal, discount, tax, and grand total update instantly.</p></div></section>
+      </aside>
+    </div>
+
+    <section class="invoice-preview" id="print-area" aria-label="Printable invoice">
+      <div class="preview-head"><div><span class="brand">Smart<span>Bill</span></span><p>Sales invoice</p></div><div class="preview-number"><strong id="preview-number">INV-2026-001</strong><span id="preview-date"></span></div></div>
+      <div class="preview-customer"><span>BILL TO</span><strong id="preview-customer">Customer name</strong><small id="preview-phone">Customer phone</small></div>
+      <div class="table-wrap"><table><thead><tr><th>Product</th><th>Unit price</th><th>Quantity</th><th>Amount</th></tr></thead><tbody id="preview-body"><tr><td colspan="4">No items</td></tr></tbody></table></div>
+      <div class="preview-total" id="preview-totals"></div>
+      <p class="thank-you">Thank you for your business!</p>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="container">SmartBill · JavaScript Fundamentals Learning Project</div></footer>
+  <script src="js/app.js"></script>
+</body>
+</html>
